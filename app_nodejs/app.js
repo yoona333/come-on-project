@@ -190,14 +190,35 @@ app.get('/ischange/password',verifyToken,  (req, res) => {
   });
 });
 
-// 路由 2: 修改对应的 username 的 is_forgotten 为 0，password 修改为 000000
-app.post('/ischange/password',verifyToken,  (req, res) => {
+// // 路由 2: 修改对应的 username 的 is_forgotten 为 0，password 修改为 000000
+// app.post('/ischange/password',verifyToken,  (req, res) => {
+//   const { username } = req.body;
+//   if (!username) {
+//     return res.status(400).json({ error: '缺少必要的参数: username' });
+//   }
+//   const query = 'UPDATE users SET is_forgotten = 0, password = "000000" WHERE username = ?';
+//   connection.query(query, [username], (err, results) => {
+//     if (err) {
+//       console.error('重置用户密码失败:', err);
+//       return res.status(500).json({ error: '重置用户密码失败' });
+//     }
+//     if (results.affectedRows === 0) {
+//       return res.status(404).json({ error: '未找到用户' });
+//     }
+//     res.json({ message: `用户 ${username} 密码重置成功` });
+//   });
+// });
+
+// 路由 2: 修改对应的 username 的 is_forgotten 为 0，password 修改为 4 位随机数
+app.post('/ischange/password', verifyToken, (req, res) => {
   const { username } = req.body;
   if (!username) {
     return res.status(400).json({ error: '缺少必要的参数: username' });
   }
-  const query = 'UPDATE users SET is_forgotten = 0, password = "000000" WHERE username = ?';
-  connection.query(query, [username], (err, results) => {
+  // 生成 4 位随机数
+  const newPassword = Math.floor(1000 + Math.random() * 9000).toString();
+  const query = 'UPDATE users SET is_forgotten = 0, password = ? WHERE username = ?';
+  connection.query(query, [newPassword, username], (err, results) => {
     if (err) {
       console.error('重置用户密码失败:', err);
       return res.status(500).json({ error: '重置用户密码失败' });
@@ -205,7 +226,7 @@ app.post('/ischange/password',verifyToken,  (req, res) => {
     if (results.affectedRows === 0) {
       return res.status(404).json({ error: '未找到用户' });
     }
-    res.json({ message: `用户 ${username} 密码重置成功` });
+    res.json({ message: `用户 ${username} 密码重置成功，新密码为: ${newPassword}` });
   });
 });
 

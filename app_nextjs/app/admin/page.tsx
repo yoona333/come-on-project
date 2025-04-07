@@ -9,8 +9,26 @@ import {
 } from '@ant-design/icons';
 import styles from '../../src/styles/Layout.module.scss';
 import { useState } from 'react';
+import { jwtDecode } from 'jwt-decode'; // 假设已经安装了 jwt-decode 库
 
 export default function AdminDashboard() {
+  // 检查 JWT
+  const token = localStorage.getItem('token'); // 从本地存储获取 token
+  if (!token) {
+    return <div>请先登录</div>;
+  }
+
+  try {
+    const decoded = jwtDecode(token);
+    // 这里可以添加更多的验证逻辑，例如检查 token 是否过期
+    const currentTime = Date.now() / 1000;
+    if (decoded.exp!== undefined && decoded.exp < currentTime) {
+      return <div>Token 已过期，请重新登录</div>;
+    }
+  } catch (error) {
+    return <div>无效的 Token，请重新登录</div>;
+  }
+
   // 模拟数据
   const stats = [
     { title: '注册学生', value: 1256, icon: <UserOutlined /> },

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Home from '../../homedaohan/page';
+// import Home from '../../homedaohan/page';
 import withAuthentication from '../../api/jwt';
 import styles from '../../css/add.module.css'; // 复用现有样式
 
@@ -106,7 +106,7 @@ const AssignPoints: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Home />
+      {/* <Home /> */}
       <div className={styles.content}>
         <h1>积分分配</h1>
         {success && <div className={styles.successMessage}>积分分配成功！</div>}

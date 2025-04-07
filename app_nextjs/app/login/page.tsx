@@ -29,6 +29,10 @@ const LoginPage = () => {
         if (data.token) {
           localStorage.setItem('token', data.token);
         }
+                // 存储role到localStorage
+                if (data.role!== undefined) {
+                  localStorage.setItem('role', data.role.toString());
+                }
         message.success('登录成功！');
         if (data.role === 0) {
           router.push('/admin');
